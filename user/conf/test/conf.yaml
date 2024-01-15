@@ -1,0 +1,44 @@
+kitex:
+  service: "user"
+  address: ":8888"
+  enable_otel: false
+  log_level: info
+  log_file_name: "resource/log/kitex.log"
+  log_max_size: 10
+  log_max_age: 3
+  log_max_backups: 50
+
+registry:
+  registry_address:
+    - 127.0.0.1:2379
+  username: ""
+  password: ""
+
+mysql:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/g_otter?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "127.0.0.1:6379"
+  username: ""
+  password: ""
+  db: 0
+
+casbin:
+  model_name: "resource/casbin/rbac_model.conf"
+  policy_table: "user_common_casbin"
+  policy_redis: "127.0.0.1:6379"
+
+paseto:
+  cache_key: "ottoken"
+  normal_refresh: 10800 # refresh<t<timeout token will refresh
+  normal_timeout: 16200 # timeout<t token will be invalidated
+  admin_refresh: 604800
+  admin_timeout: 604800
+
+otel:
+  endpoint: "127.0.0.1:4317"
+
+rpc:
+  -
+    service: ""
+    address: ""
