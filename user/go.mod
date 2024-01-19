@@ -9,7 +9,6 @@ replace (
 )
 
 require (
-	github.com/cloudwego/hertz v0.8.0
 	github.com/cloudwego/kitex v0.8.0
 	github.com/kitex-contrib/obs-opentelemetry v0.2.5
 	github.com/redis/go-redis/v9 v9.4.0
@@ -44,6 +43,7 @@ require (
 	github.com/cloudwego/dynamicgo v0.1.6 // indirect
 	github.com/cloudwego/fastpb v0.0.4 // indirect
 	github.com/cloudwego/frugal v0.1.12 // indirect
+	github.com/cloudwego/hertz v0.8.0 // indirect
 	github.com/cloudwego/localsession v0.0.2 // indirect
 	github.com/cloudwego/netpoll v0.5.1 // indirect
 	github.com/cloudwego/thriftgo v0.3.3 // indirect

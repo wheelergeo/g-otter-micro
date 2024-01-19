@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestLogin_Run(t *testing.T) {
+func TestRpcUpdateUserOnline_Run(t *testing.T) {
 	ctx := context.Background()
-	s := NewLoginService(ctx)
+	s := NewRpcUpdateUserOnlineService(ctx)
 	// init req and assert value
 
-	req := &user.LoginReq{}
+	req := &user.RpcUpdateUserOnlineReq{}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)

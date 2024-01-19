@@ -66,10 +66,10 @@ type Casbin struct {
 
 type Paseto struct {
 	CacheKey      string `yaml:"cache_key"`
-	NormalRefresh string `yaml:"normal_refresh"`
-	NormalTimeout string `yaml:"normal_timeout"`
-	AdminRefresh  string `yaml:"admin_refresh"`
-	AdminTimeout  string `yaml:"admin_timeout"`
+	NormalRefresh int    `yaml:"normal_refresh"`
+	NormalTimeout int    `yaml:"normal_timeout"`
+	AdminRefresh  int    `yaml:"admin_refresh"`
+	AdminTimeout  int    `yaml:"admin_timeout"`
 }
 
 type Otel struct {

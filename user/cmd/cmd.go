@@ -2,11 +2,11 @@ package usercmd
 
 import (
 	"context"
+	"errors"
 	"net"
 	"sync"
 	"time"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/transmeta"
@@ -16,13 +16,15 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/wheelergeo/g-otter-gen/user/userservice"
 	"github.com/wheelergeo/g-otter-micro-user/biz/dal"
+	"github.com/wheelergeo/g-otter-micro-user/biz/dal/model"
 	"github.com/wheelergeo/g-otter-micro-user/biz/dal/mysql"
 	"github.com/wheelergeo/g-otter-micro-user/biz/dal/redis"
 	"github.com/wheelergeo/g-otter-micro-user/biz/handler"
 	"github.com/wheelergeo/g-otter-micro-user/conf"
-	"github.com/wheelergeo/g-otter-micro-user/pkg/auth"
-	"github.com/wheelergeo/g-otter-micro-user/pkg/logger"
-	"github.com/wheelergeo/g-otter-micro-user/pkg/token"
+	"github.com/wheelergeo/g-otter-pkg/auth"
+	"github.com/wheelergeo/g-otter-pkg/logger"
+	"github.com/wheelergeo/g-otter-pkg/token"
+	"gorm.io/gorm"
 )
 
 var once sync.Once
@@ -44,12 +46,22 @@ func Command() *cobra.Command {
 				token.Init(
 					redis.RedisClient,
 					conf.GetConf().Paseto.CacheKey,
-					nil,
+					func(tv *token.TokenValue, cd token.ClaimData, expiredAt time.Time) {
+						online := model.UserCommonOnline{}
+						err := mysql.DB.Where("token", tv.Authorization).
+							Limit(1).Find(&online).Error
+						if errors.Is(err, gorm.ErrRecordNotFound) {
+							return
+						}
+						online.TokenExpiredAt = expiredAt
+						online.LoginAt = time.Now()
+						mysql.DB.Save(&online)
+					},
 				)
 				logger.InitKlogWithLogrus(logger.Config{
 					Mode:   logger.StdOut,
 					Format: logger.Text,
-					Level:  hlog.Level(conf.LogLevel()),
+					Level:  logger.Level(conf.LogLevel()),
 					FileCfg: logger.FileConfig{
 						FileName:      conf.GetConf().Kitex.LogFileName,
 						MaxSize:       conf.GetConf().Kitex.LogMaxSize,
