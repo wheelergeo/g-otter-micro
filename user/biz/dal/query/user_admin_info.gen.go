@@ -33,7 +33,6 @@ func newUserAdminInfo(db *gorm.DB, opts ...gen.DOOption) userAdminInfo {
 	_userAdminInfo.PhoneNumber = field.NewString(tableName, "phone_number")
 	_userAdminInfo.RealName = field.NewString(tableName, "real_name")
 	_userAdminInfo.UserPassword = field.NewString(tableName, "user_password")
-	_userAdminInfo.UserSalt = field.NewString(tableName, "user_salt")
 	_userAdminInfo.UserStatus = field.NewInt32(tableName, "user_status")
 	_userAdminInfo.UserEmail = field.NewString(tableName, "user_email")
 	_userAdminInfo.UserMode = field.NewInt32(tableName, "user_mode")
@@ -68,7 +67,6 @@ type userAdminInfo struct {
 	PhoneNumber   field.String // +国家代码 手机号
 	RealName      field.String // 真实姓名
 	UserPassword  field.String // 登录密码;cmf_password加密
-	UserSalt      field.String // 加密盐
 	UserStatus    field.Int32  // 用户状态;0:禁用,1:正常,2:未验证
 	UserEmail     field.String // 用户邮箱
 	UserMode      field.Int32  // 1:内部用户 2:外部用户
@@ -109,7 +107,6 @@ func (u *userAdminInfo) updateTableName(table string) *userAdminInfo {
 	u.PhoneNumber = field.NewString(table, "phone_number")
 	u.RealName = field.NewString(table, "real_name")
 	u.UserPassword = field.NewString(table, "user_password")
-	u.UserSalt = field.NewString(table, "user_salt")
 	u.UserStatus = field.NewInt32(table, "user_status")
 	u.UserEmail = field.NewString(table, "user_email")
 	u.UserMode = field.NewInt32(table, "user_mode")
@@ -152,14 +149,13 @@ func (u *userAdminInfo) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (u *userAdminInfo) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 25)
+	u.fieldMap = make(map[string]field.Expr, 24)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["uuid"] = u.UUID
 	u.fieldMap["user_name"] = u.UserName
 	u.fieldMap["phone_number"] = u.PhoneNumber
 	u.fieldMap["real_name"] = u.RealName
 	u.fieldMap["user_password"] = u.UserPassword
-	u.fieldMap["user_salt"] = u.UserSalt
 	u.fieldMap["user_status"] = u.UserStatus
 	u.fieldMap["user_email"] = u.UserEmail
 	u.fieldMap["user_mode"] = u.UserMode

@@ -20,7 +20,6 @@ type UserAdminInfo struct {
 	PhoneNumber   string         `gorm:"column:phone_number;not null" json:"phone_number"`         // +国家代码 手机号
 	RealName      string         `gorm:"column:real_name;not null" json:"real_name"`               // 真实姓名
 	UserPassword  string         `gorm:"column:user_password;not null" json:"user_password"`       // 登录密码;cmf_password加密
-	UserSalt      string         `gorm:"column:user_salt;not null" json:"user_salt"`               // 加密盐
 	UserStatus    int32          `gorm:"column:user_status;not null;default:1" json:"user_status"` // 用户状态;0:禁用,1:正常,2:未验证
 	UserEmail     string         `gorm:"column:user_email;not null" json:"user_email"`             // 用户邮箱
 	UserMode      int32          `gorm:"column:user_mode;not null;default:1" json:"user_mode"`     // 1:内部用户 2:外部用户

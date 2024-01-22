@@ -68,10 +68,18 @@ func (s *RpcWebLoginService) Run(req *user.RpcWebLoginReq) (resp *user.RpcWebLog
 	}
 
 	// generate token
+	claim := token.NewClaimByUserContext(token.UserContext{
+		Id:    adminInfo.ID,
+		UUID:  adminInfo.UUID,
+		Phone: adminInfo.PhoneNumber,
+		Dept:  adminInfo.DeptID,
+		Post:  adminInfo.PostID,
+	})
+
 	auth, expiredAt, err := token.TokenAuth().New(
 		conf.GetConf().Paseto.AdminRefresh,
 		conf.GetConf().Paseto.AdminTimeout,
-		token.ClaimData{},
+		claim,
 	)
 	if err != nil {
 		resp.Status.Code = constants.GenTokenErr
@@ -102,7 +110,7 @@ func (s *RpcWebLoginService) Run(req *user.RpcWebLoginReq) (resp *user.RpcWebLog
 
 	// multi-point login of the same client is not support
 	oldOnline := model.UserCommonOnline{}
-	err = mysql.DB.Where("client=web AND phone_number=?", req.PhoneNum).
+	err = mysql.DB.Where("client='web' AND phone_number=?", req.PhoneNum).
 		Limit(1).Find(&oldOnline).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		newOnline.ID = oldOnline.ID
