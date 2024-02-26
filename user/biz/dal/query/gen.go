@@ -17,23 +17,23 @@ import (
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:            db,
-		UserAdminInfo: newUserAdminInfo(db, opts...),
+		db:             db,
+		UserCommonDept: newUserCommonDept(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	UserAdminInfo userAdminInfo
+	UserCommonDept userCommonDept
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:            db,
-		UserAdminInfo: q.UserAdminInfo.clone(db),
+		db:             db,
+		UserCommonDept: q.UserCommonDept.clone(db),
 	}
 }
 
@@ -47,18 +47,18 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:            db,
-		UserAdminInfo: q.UserAdminInfo.replaceDB(db),
+		db:             db,
+		UserCommonDept: q.UserCommonDept.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	UserAdminInfo *userAdminInfoDo
+	UserCommonDept *userCommonDeptDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		UserAdminInfo: q.UserAdminInfo.WithContext(ctx),
+		UserCommonDept: q.UserCommonDept.WithContext(ctx),
 	}
 }
 
