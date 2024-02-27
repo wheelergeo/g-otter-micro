@@ -25,7 +25,6 @@ func TestRpcUserCommonDeptCreate_Run(t *testing.T) {
 	req := &user.RpcUserCommonDeptCreateReq{
 		ParentId:   0,
 		AncestorId: 0,
-		DeptName:   "测试",
 		Status:     1,
 		Leader:     nil,
 		PhoneNum:   nil,

@@ -19,6 +19,13 @@ func NewRpcUserCommonDeptRetrieveService(ctx context.Context) *RpcUserCommonDept
 
 // Run create note info
 func (s *RpcUserCommonDeptRetrieveService) Run(req *user.RpcUserCommonDeptRetrieveReq) (resp *user.RpcUserCommonDeptRetrieveResp, err error) {
+	err = req.IsValid()
+	if err != nil {
+		klog.CtxErrorf(s.ctx, err.Error())
+		resp.Status.Code = constants.ParamInvalid
+		resp.Status.Message = constants.ParamInvalidMsg
+		return
+	}
 	resp = new(user.RpcUserCommonDeptRetrieveResp)
 	resp.Status = new(user.BaseResp)
 

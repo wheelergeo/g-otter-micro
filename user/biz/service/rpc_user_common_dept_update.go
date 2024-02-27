@@ -19,6 +19,13 @@ func NewRpcUserCommonDeptUpdateService(ctx context.Context) *RpcUserCommonDeptUp
 
 // Run create note info
 func (s *RpcUserCommonDeptUpdateService) Run(req *user.RpcUserCommonDeptUpdateReq) (resp *user.RpcUserCommonDeptUpdateResp, err error) {
+	err = req.IsValid()
+	if err != nil {
+		klog.CtxErrorf(s.ctx, err.Error())
+		resp.Status.Code = constants.ParamInvalid
+		resp.Status.Message = constants.ParamInvalidMsg
+		return
+	}
 	resp = new(user.RpcUserCommonDeptUpdateResp)
 	resp.Status = new(user.BaseResp)
 

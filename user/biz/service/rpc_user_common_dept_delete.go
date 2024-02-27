@@ -20,6 +20,13 @@ func NewRpcUserCommonDeptDeleteService(ctx context.Context) *RpcUserCommonDeptDe
 // Run create note info
 func (s *RpcUserCommonDeptDeleteService) Run(req *user.RpcUserCommonDeptDeleteReq) (resp *user.RpcUserCommonDeptDeleteResp, err error) {
 	// Finish your business logic.
+	err = req.IsValid()
+	if err != nil {
+		klog.CtxErrorf(s.ctx, err.Error())
+		resp.Status.Code = constants.ParamInvalid
+		resp.Status.Message = constants.ParamInvalidMsg
+		return
+	}
 	resp = new(user.RpcUserCommonDeptDeleteResp)
 	resp.Status = new(user.BaseResp)
 

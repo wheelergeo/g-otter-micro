@@ -19,6 +19,13 @@ func NewRpcUserCommonDeptRetrieveTreeService(ctx context.Context) *RpcUserCommon
 
 // Run create note info
 func (s *RpcUserCommonDeptRetrieveTreeService) Run(req *user.RpcUserCommonDeptRetrieveTreeReq) (resp *user.RpcUserCommonDeptRetrieveTreeResp, err error) {
+	err = req.IsValid()
+	if err != nil {
+		klog.CtxErrorf(s.ctx, err.Error())
+		resp.Status.Code = constants.ParamInvalid
+		resp.Status.Message = constants.ParamInvalidMsg
+		return
+	}
 	resp = new(user.RpcUserCommonDeptRetrieveTreeResp)
 	resp.Status = new(user.BaseResp)
 
