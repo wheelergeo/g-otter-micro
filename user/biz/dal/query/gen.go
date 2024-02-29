@@ -18,14 +18,14 @@ import (
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:             db,
-		UserCommonDept: newUserCommonDept(db, opts...),
+		UserCommonRole: newUserCommonRole(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	UserCommonDept userCommonDept
+	UserCommonRole userCommonRole
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -33,7 +33,7 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:             db,
-		UserCommonDept: q.UserCommonDept.clone(db),
+		UserCommonRole: q.UserCommonRole.clone(db),
 	}
 }
 
@@ -48,17 +48,17 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:             db,
-		UserCommonDept: q.UserCommonDept.replaceDB(db),
+		UserCommonRole: q.UserCommonRole.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	UserCommonDept *userCommonDeptDo
+	UserCommonRole *userCommonRoleDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		UserCommonDept: q.UserCommonDept.WithContext(ctx),
+		UserCommonRole: q.UserCommonRole.WithContext(ctx),
 	}
 }
 
