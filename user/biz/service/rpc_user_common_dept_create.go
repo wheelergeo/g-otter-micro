@@ -19,7 +19,6 @@ func NewRpcUserCommonDeptCreateService(ctx context.Context) *RpcUserCommonDeptCr
 
 // Run create note info
 func (s *RpcUserCommonDeptCreateService) Run(req *user.RpcUserCommonDeptCreateReq) (resp *user.RpcUserCommonDeptCreateResp, err error) {
-	// Finish your business logic.
 	err = req.IsValid()
 	if err != nil {
 		klog.CtxErrorf(s.ctx, err.Error())
