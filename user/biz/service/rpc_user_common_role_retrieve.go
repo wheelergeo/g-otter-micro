@@ -44,7 +44,7 @@ func (s *RpcUserCommonRoleRetrieveService) Run(req *user.RpcUserCommonRoleRetrie
 		db = db.Where("id = ?", *req.Id)
 	}
 
-	err = mysql.DB.Find(&roleModels).Error
+	err = db.Find(&roleModels).Error
 	if err != nil {
 		klog.CtxErrorf(s.ctx, err.Error())
 		resp.Status.Code = constants.UserCommonRoleRetrieveFailed

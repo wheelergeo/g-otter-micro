@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -32,6 +31,7 @@ func (s *RpcUserCommonPostRetrieveService) Run(req *user.RpcUserCommonPostRetrie
 	resp.Status = new(user.BaseResp)
 
 	postModels := []model.UserCommonPost{}
+	roleModels := []model.UserCommonRole{}
 	db := mysql.DB
 	if req.PostCode != nil {
 		db = db.Where("post_code LIKE ?", "%"+*req.PostCode+"%")
@@ -49,7 +49,7 @@ func (s *RpcUserCommonPostRetrieveService) Run(req *user.RpcUserCommonPostRetrie
 		db = db.Where("id = ?", *req.Id)
 	}
 
-	err = mysql.DB.Find(&postModels).Error
+	err = db.Find(&postModels).Error
 	if err != nil {
 		klog.CtxErrorf(s.ctx, err.Error())
 		resp.Status.Code = constants.UserCommonPostRetrieveFailed
@@ -58,14 +58,18 @@ func (s *RpcUserCommonPostRetrieveService) Run(req *user.RpcUserCommonPostRetrie
 	}
 
 	for _, v := range postModels {
-		roleStrIds := strings.Split(v.RoleIds, ",")
-		roleIds := make([]int32, 0, len(roleStrIds)-1)
-		for _, v := range roleStrIds {
-			if v == " " {
-				continue
-			}
-			num, _ := strconv.Atoi(v)
-			roleIds = append(roleIds, int32(num))
+		roleIds := strings.Split(v.RoleIds, ",")
+		err = mysql.DB.Where("id IN ?", roleIds[:len(roleIds)-1]).Find(&roleModels).Error
+		if err != nil {
+			klog.CtxErrorf(s.ctx, err.Error())
+			resp.Status.Code = constants.UserCommonPostRetrieveFailed
+			resp.Status.Message = constants.UserCommonPostRetrieveFailedMsg
+			return
+		}
+
+		roles := make(map[int32]string, len(roleModels))
+		for _, v := range roleModels {
+			roles[v.ID] = v.Name
 		}
 
 		resp.List = append(resp.List, &user.UserPostInfo{
@@ -75,7 +79,7 @@ func (s *RpcUserCommonPostRetrieveService) Run(req *user.RpcUserCommonPostRetrie
 			Level:    int8(v.Level),
 			Status:   int8(v.Status),
 			Remark:   v.Remark,
-			RoleIds:  roleIds,
+			Roles:    roles,
 			CreateAt: v.CreatedAt.String(),
 			UpdateAt: v.UpdatedAt.String(),
 		})

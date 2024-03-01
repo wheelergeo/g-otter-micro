@@ -35,7 +35,7 @@ func (s *RpcUserCommonKvRetrieveService) Run(req *user.RpcUserCommonKvRetrieveRe
 		db = db.Where("key = ?", *req.Key)
 	}
 
-	err = mysql.DB.Find(&kvModels).Error
+	err = db.Find(&kvModels).Error
 	if err != nil {
 		klog.CtxErrorf(s.ctx, err.Error())
 		resp.Status.Code = constants.UserCommonKvRetrieveFailed

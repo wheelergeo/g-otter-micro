@@ -47,7 +47,7 @@ func (s *RpcUserCommonDeptRetrieveService) Run(req *user.RpcUserCommonDeptRetrie
 		db = db.Where("id = ?", *req.Id)
 	}
 
-	err = mysql.DB.Find(&deptModels).Error
+	err = db.Find(&deptModels).Error
 	if err != nil {
 		klog.CtxErrorf(s.ctx, err.Error())
 		resp.Status.Code = constants.UserCommonDeptRetrieveFailed
